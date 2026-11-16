@@ -29,6 +29,17 @@ pub struct AbilityValue {
     pub level_usage: i32,
 }
 
+/// `ability_value_usage` ids [`AbilityValue::new`] and its readers implement (0 and 1 are direct); others fall back to
+/// direct silently.
+pub fn value_usage_known(usage: i32) -> bool {
+    (0..=23).contains(&usage)
+}
+
+/// `ability_time_usage` ids [`AbilityTime`] implements (0 and 1 are direct); others fall back to direct silently.
+pub fn time_usage_known(usage: i32) -> bool {
+    (0..=7).contains(&usage)
+}
+
 /// How a skill detail's duration is computed. `usage`: 0/1/unknown direct, 2 distance behind the leader,
 /// 3/7 remaining HP, 4 extended per position gained, 5/6 blocked-side time.
 #[derive(Clone, Debug, Default)]

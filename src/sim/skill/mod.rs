@@ -214,10 +214,22 @@ fn create_ability(race: &mut Race, r: SkillDetailRef, level: i32, ab: &SkillAbil
     if t < 1 {
         return None;
     }
-    match t {
-        1..=5 | 7..=14 | 21 | 22 | 27..=32 | 35..=38 => Some(Some(ability::SkillAbility::new(race, r, level, ab, target))),
-        _ => Some(None),
+    if ability_has_effect(t) {
+        Some(Some(ability::SkillAbility::new(race, r, level, ab, target)))
+    } else {
+        Some(None)
     }
+}
+
+/// Ability types the sim gives an effect.
+pub fn ability_has_effect(t: i32) -> bool {
+    matches!(t, 1..=5 | 7..=14 | 21 | 22 | 27..=32 | 35..=38)
+}
+
+/// Ability types the sim knows: with an effect, or known to have none in a race (6, 501..=503). Anything else is a
+/// type this code has never seen (a new game mechanic), silently without effect.
+pub fn ability_known(t: i32) -> bool {
+    t == 0 || ability_has_effect(t) || matches!(t, 6 | 501..=503)
 }
 
 /// Pre-race wiz lot: decides which `activate_lot` skills may activate this race. `base_wiz` is the halved wiz.

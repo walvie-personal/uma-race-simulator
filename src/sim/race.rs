@@ -144,6 +144,32 @@ pub struct Race<'a> {
     pub next_modifier_id: u64,
 }
 
+impl<'a> Race<'a> {
+    /// A race with nothing initialised: no course, default field. For tests and checks that only build skills.
+    pub fn bare(data: &'a GameData, input: &'a RaceInput, seed: i32, horses: Vec<Horse>) -> Race<'a> {
+        Race {
+            data,
+            input,
+            info: Default::default(),
+            rng: RaceRandom::new(seed),
+            horses,
+            field: Default::default(),
+            course: Default::default(),
+            course_lane: Default::default(),
+            event_manager: Default::default(),
+            accumulate_time_since_start: 0.0,
+            behind_lane_threshold: 0.0,
+            world_per_metre: 0.0,
+            distance_diff_max: 0.0,
+            is_simulate_end: false,
+            recorder: Default::default(),
+            record_timer: 0.0,
+            record_every_step: false,
+            next_modifier_id: 0,
+        }
+    }
+}
+
 pub fn lookup_course_set(data: &GameData, course_set_id: i32) -> RaceCourseSet {
     data.master.race_course_set.get(&course_set_id).unwrap_or_else(|| panic!("race_course_set {course_set_id} not in master")).clone()
 }

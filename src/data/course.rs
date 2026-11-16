@@ -85,6 +85,11 @@ impl<T: for<'de> Deserialize<'de>> JsonFiles<T> {
         Ok(JsonFiles { dirs, cache: Mutex::default() })
     }
 
+    /// Whether some directory has `<stem>.json` (no parsing).
+    pub fn has(&self, stem: &str) -> bool {
+        self.dirs.iter().any(|d| d.join(format!("{stem}.json")).is_file())
+    }
+
     /// `None` if no directory has `<stem>.json`. Panics on an unreadable / invalid file.
     pub fn get(&self, stem: &str) -> Option<Arc<T>> {
         let mut cache = self.cache.lock().unwrap_or_else(|e| e.into_inner());

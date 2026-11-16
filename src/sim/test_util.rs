@@ -4,7 +4,6 @@ use std::sync::OnceLock;
 
 use crate::api::{HorseInput, RaceInput};
 use crate::data::{DataEra, GameData};
-use crate::rng::RaceRandom;
 use crate::sim::ai::around::AroundHorse;
 use crate::sim::ai::order::Standings;
 use crate::sim::horse::Horse;
@@ -22,26 +21,7 @@ pub fn input(n: usize) -> RaceInput {
 }
 
 fn bare_race<'a>(data: &'a GameData, input: &'a RaceInput, seed: i32, horses: Vec<Horse>) -> Race<'a> {
-    Race {
-        data,
-        input,
-        info: Default::default(),
-        rng: RaceRandom::new(seed),
-        horses,
-        field: Default::default(),
-        course: Default::default(),
-        course_lane: Default::default(),
-        event_manager: Default::default(),
-        accumulate_time_since_start: 0.0,
-        behind_lane_threshold: 0.0,
-        world_per_metre: 0.0,
-        distance_diff_max: 0.0,
-        is_simulate_end: false,
-        recorder: Default::default(),
-        record_timer: 0.0,
-        record_every_step: false,
-        next_modifier_id: 0,
-    }
+    Race::bare(data, input, seed, horses)
 }
 
 /// `n` default horses with only `race_paramdefine.json` loaded, course max lane 1.5, and the AI state's no-RNG
